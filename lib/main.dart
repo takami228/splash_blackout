@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Future.delayed(Duration(seconds: 10), () {
+    runApp(MyApp());
+  });
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
