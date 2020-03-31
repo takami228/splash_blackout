@@ -91,7 +91,7 @@ void main() {
 
 | Android　Emulator | Android実機 |  iOSエミュレータ |  iOS実機 |
 | ---- | ---- | ---- | ---- |
-| ○ | NG | ○ | ○　|
+| ○ | × | ○ | ○　|
 
 ## 対処その2
 
