@@ -1,0 +1,19 @@
+diff --git a/packages/flutter/lib/src/rendering/binding.dart b/packages/flutter/lib/src/rendering/binding.dart
+index adf10377f..f19cb44cc 100644
+--- a/packages/flutter/lib/src/rendering/binding.dart
++++ b/packages/flutter/lib/src/rendering/binding.dart
+@@ -42,10 +42,13 @@ mixin RendererBinding on BindingBase, ServicesBinding, SchedulerBinding, Gesture
+     initRenderView();
+     _handleSemanticsEnabledChanged();
+     assert(renderView != null);
+-    addPersistentFrameCallback(_handlePersistentFrameCallback);
+     initMouseTracker();
+   }
+ 
++  void initPersistentFrameCallback(){
++    addPersistentFrameCallback(_handlePersistentFrameCallback);
++  }
++
+   /// The current [RendererBinding], if one has been created.
+   static RendererBinding get instance => _instance;
+   static RendererBinding _instance;

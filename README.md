@@ -11,10 +11,10 @@ v1.16.3で修正がマージされた模様。 https://github.com/flutter/flutte
 ## 検証端末
 
 - Android
-  - Emulator(AndroidSDK 29)
-  - HTC U11 life(Android 8.1)
+  - Emulator(Android SDK 29)
+  - HTC U11 life(Android 8.0)
 - iOS
-  - Emulator(iOS 13.2)
+  - Emulator(iOS 13.3)
   - iPhone 6s(iOS 13.3)
 
 flavorはdebugビルドにて検証する。
@@ -26,13 +26,13 @@ flavorはdebugビルドにて検証する。
 
 | flutterバージョン | Android　Emulator | Android実機 |  iOSエミュレータ |  iOS実機 |
 | ---- | ---- | ---- | ---- | ---- |
-| v1.9.1+hotfix.6 | NG | NG | NG | × |
-| v1.12.13+hotfix.8 | NG | NG | NG | ○　|
-| v1.16.3 | ○ | NG | ○　|  ○　|
+| v1.9.1+hotfix.6 | × | × | × | × |
+| v1.12.13+hotfix.8 | × | × | × | ○　|
+| v1.16.3 | ○ | × | ○　|  ○　|
 
 ## 原因？
 
-1.9.1から1.12.13に上げたときにいれた `WidgetsFlutterBinding.ensureInitialized()` の処理を入れないと発生しない。
+1.9.1から1.12.13に上げたときにいれろと言われた `WidgetsFlutterBinding.ensureInitialized()` の処理を入れないと発生しない。
 
 ```dart
 void main() {
@@ -48,7 +48,51 @@ void main() {
 
 ## 対処その1
 
-以下のwork aroundをやってみる。
+`v1.12.13+hotfix.8`にバージョンを固定して、Issueで紹介されていた以下のwork aroundをやってみる。
 
 - https://github.com/flutter/flutter/issues/39494#issuecomment-565627914
 - https://github.com/flutter/flutter/issues/39494#issuecomment-596089595
+
+```
+diff --git a/packages/flutter/lib/src/rendering/binding.dart b/packages/flutter/lib/src/rendering/binding.dart
+index adf10377f..f19cb44cc 100644
+--- a/packages/flutter/lib/src/rendering/binding.dart
++++ b/packages/flutter/lib/src/rendering/binding.dart
+@@ -42,10 +42,13 @@ mixin RendererBinding on BindingBase, ServicesBinding, SchedulerBinding, Gesture
+     initRenderView();
+     _handleSemanticsEnabledChanged();
+     assert(renderView != null);
+-    addPersistentFrameCallback(_handlePersistentFrameCallback);
+     initMouseTracker();
+   }
+
++  void initPersistentFrameCallback(){
++    addPersistentFrameCallback(_handlePersistentFrameCallback);
++  }
++
+   /// The current [RendererBinding], if one has been created.
+   static RendererBinding get instance => _instance;
+   static RendererBinding _instance;
+```
+
+```dart
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Future.delayed(Duration(seconds: 10), () {
+    RendererBinding.instance.initPersistentFrameCallback();
+    runApp(MyApp());
+  });
+}
+```
+
+### 結果
+
+エミュレータでは治ったもののAndroidで変わらず...
+
+| Android　Emulator | Android実機 |  iOSエミュレータ |  iOS実機 |
+| ---- | ---- | ---- | ---- |
+| ○ | NG | ○ | ○　|
+
+## 対処その2
+
+...
