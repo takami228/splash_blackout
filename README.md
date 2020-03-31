@@ -106,11 +106,13 @@ https://github.com/flutter/flutter/issues/22007#issuecomment-605827915 を発見
                 />
 ```
 
-flutterのバージョンアップで新しく定義された模様　https://github.com/flutter/engine/pull/9525/files
+flutterのバージョンアップで新しく定義された模様　
+
+https://github.com/flutter/engine/pull/9525/files
 
 https://flutter.dev/docs/development/ui/splash-screen/android-splash-screen
 
-## 結果
+### 結果
 
 iOSは実機はOKなので省きます。
 
@@ -120,7 +122,10 @@ iOSは実機はOKなので省きます。
 
 ## 結論
 
-release noteを読もう・・・。
+Androidで黒画面が出た原因は `WidgetsFlutterBinding.ensureInitialized()` ではなくて、 https://github.com/flutter/engine/pull/9525/files で追加されたスプラッシュ画面のdrawableの定義がなかったから。
+
+
+release noteを読もう。
 
 https://flutter.dev/docs/development/tools/sdk/release-notes/release-notes-1.12.13
 
