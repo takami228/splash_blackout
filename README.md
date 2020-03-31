@@ -19,10 +19,26 @@ v1.16.3で修正がマージされた模様。 https://github.com/flutter/flutte
 
 flavorはdebugビルドにて検証する。
 
+## 原因
+
+1.9.1から1.12.13に上げた以降に発生している。
+
+WidgetsFlutterBinding.ensureInitialized() の処理を入れないと1.9.1では発生しない疑惑。
+
 ## 切り分け
 
 - ○ : 黒画面が表示されない
 - × : 黒画面が表示される
+
+#### WidgetsFlutterBinding.ensureInitialized なし
+
+| flutterバージョン | Android　Emulator | Android実機 |  iOSエミュレータ |  iOS実機 |
+| ---- | ---- | ---- | ---- | ---- |
+| v1.9.1+hotfix.6 | ○ | ○ | ○ | ○ |
+| v1.12.13+hotfix.8 | ○ | × | ○ | ○　|
+| v1.16.3 | ○ | × | ○　|  ○　|
+
+#### WidgetsFlutterBinding.ensureInitialized あり
 
 | flutterバージョン | Android　Emulator | Android実機 |  iOSエミュレータ |  iOS実機 |
 | ---- | ---- | ---- | ---- | ---- |
@@ -30,21 +46,7 @@ flavorはdebugビルドにて検証する。
 | v1.12.13+hotfix.8 | × | × | × | ○　|
 | v1.16.3 | ○ | × | ○　|  ○　|
 
-## 原因？
-
-1.9.1から1.12.13に上げたときにいれろと言われた `WidgetsFlutterBinding.ensureInitialized()` の処理を入れないと発生しない。
-
-```dart
-void main() {
-
-  WidgetsFlutterBinding.ensureInitialized();
-
-  Future.delayed(Duration(seconds: 10), () {
-    runApp(MyApp());
-  });
-}
-
-```
+WidgetsFlutterBinding.ensureInitialized は必要なのでありの状態での対処を考える。
 
 ## 対処その1
 
@@ -122,8 +124,9 @@ iOSは実機はOKなので省きます。
 
 ## 結論
 
-Androidで黒画面が出た原因は `WidgetsFlutterBinding.ensureInitialized()` ではなくて、 https://github.com/flutter/engine/pull/9525/files で追加されたスプラッシュ画面のdrawableの定義がなかったから。
+https://github.com/flutter/engine/pull/9525/files で追加されたスプラッシュ画面のdrawableの定義がなかったから黒画面になったから。
 
+iOSの黒画面は https://github.com/flutter/flutter/commit/9f4e5ad9c3a63a7e50f358b5cbf233872e9e077c の対処が必要だが実機では発生しないので放置でよさそう。
 
 release noteを読もう。
 
