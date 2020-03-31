@@ -95,4 +95,24 @@ void main() {
 
 ## 対処その2
 
-...
+https://github.com/flutter/flutter/issues/22007#issuecomment-605827915 を発見。
+
+よく見たらAndroidXMLのSplashScreenDrawableが抜けてた。
+
+```xml
+            <meta-data
+                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+                android:resource="@drawable/launch_background"
+                />
+```
+
+flutterのバージョンアップで新しく定義された模様　https://github.com/flutter/engine/pull/9525/files
+
+https://flutter.dev/docs/development/ui/splash-screen/android-splash-screen
+
+## 結論
+
+release noteを読もう・・・。
+
+https://flutter.dev/docs/development/tools/sdk/release-notes/release-notes-1.12.13
+
