@@ -110,6 +110,14 @@ flutterのバージョンアップで新しく定義された模様　https://gi
 
 https://flutter.dev/docs/development/ui/splash-screen/android-splash-screen
 
+## 結果
+
+iOSは実機はOKなので省きます。
+
+| Android　Emulator | Android実機 |
+| ---- | ---- |
+| ○ | ○　|
+
 ## 結論
 
 release noteを読もう・・・。
